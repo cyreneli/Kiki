@@ -6,23 +6,32 @@ let REST_LENGTH = 30;
 let STRENGTH = 0.125;
 let INNER_STRENGTH = 0.13;
 let head;
-
+//solve the 640 480 strict
+let constraints = {
+  video: {
+    width: { ideal: 1280 },
+    height: { ideal: 600 }
+  }
+};
+//let predictions = [];
 
 function setup() {
-  createCanvas(900, 600);
-  //background video
-  video = createCapture(VIDEO);
-  video.size(width, height);
-  // Hide the video element, and just show the canvas
+  createCanvas(1280, 600);
+  video = createCapture(constraints, () => {
+    console.log('video ready');
+  });
+  video.size(1280, 600);
   video.hide();
 
-  //set handpose
   handpose = ml5.handpose(video, modelReady);
-  // This sets up an event that fills the global variable "predictions"
-  // with an array every time new hand poses are detected
   handpose.on("predict", results => {
     predictions = results;
   });
+  
+  //set particle2
+  for (let i = 0; i < 100; i++) {
+    particles2.push(new Particle2(random(width), random(height)));
+  }
 
   //set kikibio
   for (let y = 0; y < DIM; y++) {
@@ -53,10 +62,6 @@ for (let y = 0; y < DIM; y++) {
   }
 }
 
-  //set particle2
-  for (let i = 0; i < 100; i++) {
-    particles2.push(new Particle2(random(width), random(height)));
-  }
 
   // 内部对角骨架
   let p1 = particles[0];
@@ -114,25 +119,6 @@ function draw() {
   detectfingers();
   videovisual();
 
-// 让六边形控制点绕鼠标旋转移动
-let t = frameCount * 0.02;
-for (let i = 0; i < 6; i++) {
-  let angle = TWO_PI / 6 * i + t;
-  let x = mouseX + 50 * cos(angle);
-  let y = mouseY + 50 * sin(angle);
-  particles[DIM * DIM + i].position.set(x, y); // hexControllers 已加入 particles
-}
-
-
-  // 新增：更新红色粒子并检查碰撞
-  for (let p2 of particles2) {
-    for (let p1 of particles) {
-      p2.repelFrom(p1);
-    }
-    p2.update();
-    p2.show();
-  }
-
 
   // Verlet 移动更新
   for (let p of particles) {
@@ -159,15 +145,14 @@ for (let i = 0; i < 6; i++) {
 }
 
 
+  // 新增：更新红色粒子并检查碰撞
+  for (let p2 of particles2) {
+    for (let p1 of particles) {
+      p2.repelFrom(p1);
+    }
+    p2.update();
+    p2.show();
+  }
   
-  //draw star
-  translate(width / 2, height / 2); // 画极坐标等内容时保持中心一致
-
-  let center = createVector(mouseX - width / 2, mouseY - height / 2);
-  let radius = 100; // 半径你可以随意设定
-
-  stroke(0);
-  fill(255, 255, 255, 10); // 半透明蓝色
-  drawHexagon(center, radius);
 }
 

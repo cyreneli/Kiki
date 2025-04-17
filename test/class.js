@@ -68,6 +68,7 @@ class Particle {
   }
 }
 
+
 class Spring {
   constructor(a, b, restLength, strength) {
     this.a = a;
@@ -87,17 +88,7 @@ class Spring {
   }
 }
 
-function drawHexagon(center, radius) {
-    beginShape();
-    for (let i = 0; i < 6; i++) {
-      let angle = TWO_PI / 6 * i;
-      let x = center.x + radius * cos(angle);
-      let y = center.y + radius * sin(angle);
-      strokeWeight(4);
-      vertex(x, y);
-    }
-    endShape(CLOSE);
-  }
+
 
 
   

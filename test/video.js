@@ -5,6 +5,7 @@ function videovisual(){
   video.loadPixels();
   translate(width, 0);
   scale(-1, 1);
+  
   for (let y=0; y<video.height; y+=gridSize) {
     for (let x=0; x<video.width; x+=gridSize) {
       
