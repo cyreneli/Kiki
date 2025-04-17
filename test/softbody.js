@@ -9,7 +9,22 @@ let head;
 
 
 function setup() {
-  createCanvas(960, 582);
+  createCanvas(900, 600);
+  //background video
+  video = createCapture(VIDEO);
+  video.size(width, height);
+  // Hide the video element, and just show the canvas
+  video.hide();
+
+  //set handpose
+  handpose = ml5.handpose(video, modelReady);
+  // This sets up an event that fills the global variable "predictions"
+  // with an array every time new hand poses are detected
+  handpose.on("predict", results => {
+    predictions = results;
+  });
+
+  //set kikibio
   for (let y = 0; y < DIM; y++) {
     for (let x = 0; x < DIM; x++) {
       let p = new Particle(x * REST_LENGTH, y * REST_LENGTH);
@@ -88,9 +103,16 @@ for (let i = 0; i < hexControllers.length; i++) {
 
 }
 
+
+function modelReady() {
+  console.log("Model ready!");
+}
+
+
 function draw() {
   background(0,0,0);
-  stroke(255);
+  detectfingers();
+  videovisual();
 
 // 让六边形控制点绕鼠标旋转移动
 let t = frameCount * 0.02;

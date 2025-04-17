@@ -1,41 +1,30 @@
-let video;
-let handpose;
+
 let predictions = [];
-
-function setupHandpose(callbackWhenReady) {
-  video = createCapture(VIDEO);
-  video.size(640, 560); // 可根据你 canvas 尺寸调整
-  video.hide();
-
-  handpose = ml5.handpose(video, () => {
-    console.log("Handpose model loaded.");
-    if (callbackWhenReady) callbackWhenReady(); // 回调通知主程序
-  });
-
-  handpose.on("predict", results => {
-    predictions = results;
-  });
-}
-
-function drawHandKeypoints() {
+function detectfingers(){
   if (predictions.length > 0) {
-    for (let i = 0; i < predictions.length; i++) {
-      const landmarks = predictions[i].landmarks;
-      for (let j = 0; j < landmarks.length; j++) {
-        const [x, y, z] = landmarks[j];
-        fill(0, 255, 0);
-        noStroke();
-        ellipse(x, y, 10, 10);
-      }
+    let hand = predictions[0];
+
+    // 镜像X坐标（左变右，右变左）
+    function mirrorX(x) {
+      return width - x;
     }
+
+    let thumbTip = hand.annotations.thumb[3]; 
+    let indexTip = hand.annotations.indexFinger[3];
+    let middleTip = hand.annotations.middleFinger[3];
+    let ringTip = hand.annotations.ringFinger[3];
+    let pinkyTip = hand.annotations.pinky[3];
+
+    push();
+    fill(255, 255, 0);
+    noStroke();
+
+    ellipse(mirrorX(thumbTip[0]), thumbTip[1], 10, 10);
+    ellipse(mirrorX(indexTip[0]), indexTip[1], 10, 10);
+    ellipse(mirrorX(middleTip[0]), middleTip[1], 10, 10);
+    ellipse(mirrorX(ringTip[0]), ringTip[1], 10, 10);
+    ellipse(mirrorX(pinkyTip[0]), pinkyTip[1], 10, 10);
+    pop();
   }
 }
 
-// 提供外部访问指尖位置（例如 index finger tip）
-function getIndexFingerTip() {
-  if (predictions.length > 0) {
-    const tip = predictions[0].landmarks[8]; // 第8个点是食指尖
-    return createVector(tip[0], tip[1]);
-  }
-  return null;
-}
