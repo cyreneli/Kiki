@@ -21,9 +21,10 @@ class Particle2 {
     let d = dir.mag();
   
     // 增大范围看可视化有没有触发
-    if (d < 40) {
+    if (d < 70) {
       // 可视化线和判定圆
-      stroke(255, 0, 0, 100);
+      stroke(255, 255, 255, 100);
+      strokeWeight(10);
       line(this.position.x, this.position.y, particle.position.x, particle.position.y);
       noFill();
       ellipse(particle.position.x, particle.position.y, 10, 10);
@@ -46,9 +47,13 @@ class Particle2 {
   }
 
   show() {
-    stroke(255);
+    stroke(255,255,255,40);
+    strokeWeight(30);
+    point(this.position.x, this.position.y);
+    stroke(0,0,0,100);
     strokeWeight(10);
     point(this.position.x, this.position.y);
+
   }
 }
 
@@ -65,7 +70,7 @@ class Particle {
     let temp = this.position.copy();
     let velocity = p5.Vector.sub(this.position, this.prev);
     this.position.add(velocity);
-    this.position.add(0, 0.5); // gravity
+    this.position.add(0, 0.2); // gravity
     this.prev = temp;
     this.constrain();
   }
@@ -96,7 +101,24 @@ class Spring {
   }
 }
 
+class TailParticle {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.prev = this.position.copy();
+    this.locked = false;
+  }
 
+  update() {
+    if (this.locked) return;
+
+    let temp = this.position.copy();
+    let velocity = p5.Vector.sub(this.position, this.prev);
+    velocity.mult(0.5); // 摩擦
+    this.position.add(velocity);
+    this.position.add(0,0.5); // 重力
+    this.prev = temp;
+  }
+}
 
 
   

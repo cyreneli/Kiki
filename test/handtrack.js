@@ -1,6 +1,7 @@
 
 let predictions = [];
 
+
 function mirrorX(x) {
   return width - x;
 }
@@ -18,6 +19,20 @@ function drawHexagon(center, radius) {
   endShape(CLOSE);
 }
 
+// 约束保持相邻粒子的距离为 tailLength
+function applyTailConstraints() {
+  for (let i = 0; i < tailParticles.length - 1; i++) {
+    let p1 = tailParticles[i];
+    let p2 = tailParticles[i + 1];
+    let dir = p2.position.copy().sub(p1.position);
+    let d = dir.mag();
+    let diff = tailLength - d;
+    dir.normalize().mult(diff / 2);
+
+    if (!p1.locked) p1.position.sub(dir);
+    if (!p2.locked) p2.position.add(dir);
+  }
+}
 
 function detectfingers(){
 // 让六边形控制点绕鼠标旋转移动
@@ -52,6 +67,10 @@ if (predictions.length > 0) {
     let y = indexTip[1] + 50 * sin(angle);
     particles[DIM * DIM + i].position.set(x, y);
   }
+// control tail
+  // 头部跟随鼠标
+  tailParticles[0].position.set(indexTip[0], indexTip[1] );
+  
 
 //control star
   let center = createVector(mirrorX(indexTip[0]), indexTip[1]);

@@ -1,8 +1,8 @@
 let particles = [];
 let particles2 = [];
 let springs = [];
-let DIM = 5;
-let REST_LENGTH = 30;
+let DIM = 3;
+let REST_LENGTH = 5;
 let STRENGTH = 0.125;
 let INNER_STRENGTH = 0.13;
 let head;
@@ -14,6 +14,13 @@ let constraints = {
   }
 };
 //let predictions = [];
+//set tail
+let tailParticles = [];
+let tailLength = 15;
+let tailNumParticles = 50;
+
+
+
 
 function setup() {
   createCanvas(1280, 600);
@@ -29,9 +36,19 @@ function setup() {
   });
   
   //set particle2
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 300; i++) {
     particles2.push(new Particle2(random(width), random(height)));
   }
+
+// set tail
+  // 初始化尾部粒子链条
+  for (let i = 0; i < tailNumParticles; i++) {
+    let x = width / 2 + i * tailLength;
+    let y = height / 2;
+    tailParticles.push(new TailParticle(x, y));
+  }
+  tailParticles[0].locked = true; // 头部默认锁定（由鼠标控制）
+
 
   //set kikibio
   for (let y = 0; y < DIM; y++) {
@@ -143,6 +160,28 @@ function draw() {
       point(x, y);
     }
 }
+
+//set tails
+  // 约束各粒子之间的距离
+  for (let i = 0; i < 10; i++) {
+    applyTailConstraints();
+  }
+  // 更新粒子位置
+  for (let p of tailParticles) {
+    p.update();
+  }
+  // 绘制线条和点
+  beginShape();
+  for (let p of tailParticles) {
+    strokeWeight(3);
+    noFill();
+    vertex(p.position.x, p.position.y);
+  }
+  endShape();
+
+  for (let p of tailParticles) {
+    ellipse(p.position.x, p.position.y, 5, 5);
+  }
 
 
   // 新增：更新红色粒子并检查碰撞
