@@ -5,6 +5,7 @@ function mirrorX(x) {
   return width - x;
 }
 
+//draw hexagon
 function drawHexagon(center, radius) {
   beginShape();
   for (let i = 0; i < 6; i++) {

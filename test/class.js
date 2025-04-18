@@ -15,16 +15,24 @@ class Particle2 {
   }
 
   repelFrom(particle) {
+    if (!particle || !particle.position) return;
+  
     let dir = p5.Vector.sub(this.position, particle.position);
     let d = dir.mag();
-    if (d < 1) { // 碰撞触发
+  
+    // 增大范围看可视化有没有触发
+    if (d < 40) {
+      // 可视化线和判定圆
+      stroke(255, 0, 0, 100);
+      line(this.position.x, this.position.y, particle.position.x, particle.position.y);
+      noFill();
+      ellipse(particle.position.x, particle.position.y, 10, 10);
       dir.normalize();
-      dir.mult(0.5); // 推动力度
+      dir.mult(2);
       this.velocity = dir;
-      this.active = true; // 标记为激活
+      this.active = true;
     }
   }
-
   constrain() {
     if (this.position.x <= 0 || this.position.x >= width) {
       this.velocity.x *= -1;
@@ -57,7 +65,7 @@ class Particle {
     let temp = this.position.copy();
     let velocity = p5.Vector.sub(this.position, this.prev);
     this.position.add(velocity);
-    this.position.add(0, 0.128); // gravity
+    this.position.add(0, 0.5); // gravity
     this.prev = temp;
     this.constrain();
   }
@@ -81,7 +89,7 @@ class Spring {
     let delta = p5.Vector.sub(this.b.position, this.a.position);
     let dist = delta.mag();
     let diff = (dist - this.restLength) / dist;
-    let force = delta.mult(0.1 * this.strength * diff);
+    let force = delta.mult(0.05 * this.strength * diff);
 
     if (!this.a.locked) this.a.position.add(force);
     if (!this.b.locked) this.b.position.sub(force);
