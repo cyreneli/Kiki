@@ -1,10 +1,12 @@
 // ------------- 基础类 -------------
-  
+let letters = ['N', 'O', 'B', 'U', 'G'];
+
 class Particle2 {
-  constructor(x, y) {
+  constructor(x, y, label) {
     this.position = createVector(x, y);
     this.velocity = createVector(0, 0); // 初始静止
     this.active = false; // 是否开始移动
+    this.label = label; // 加入字母标签
   }
 
   update() {
@@ -54,6 +56,17 @@ class Particle2 {
     strokeWeight(10);
     point(this.position.x, this.position.y);
 
+    
+    push();
+    translate(this.position.x, this.position.y);
+    scale(-1, 1); // 水平翻转，修正文字被左右颠倒
+    fill(255,255,255,90);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text(this.label, 0, 0); // 注意现在绘制位置是 (0,0)
+    pop();
+    
   }
 }
 

@@ -37,7 +37,11 @@ function setup() {
   
   //set particle2
   for (let i = 0; i < 300; i++) {
-    particles2.push(new Particle2(random(width), random(height)));
+    //particles2.push(new Particle2(random(width), random(height)));
+    let x = random(width);
+    let y = random(height);
+    let label = random(letters); // 从字母池随机挑一个
+    particles2.push(new Particle2(x, y, label));
   }
 
 // set tail
