@@ -17,6 +17,10 @@ function drawHexagon(center, radius) {
     vertex(x, y);
   }
   endShape(CLOSE);
+
+  noStroke();
+  fill(255, 0, 0); // 红色
+  ellipse(center.x, center.y, radius * 0.3, radius * 0.3); // 小圆，半径为大圆的 30%
 }
 
 // 约束保持相邻粒子的距离为 tailLength
